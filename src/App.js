@@ -54,7 +54,7 @@ export default function App() {
           />
         </PerspectiveCamera>
         <Suspense fallback={null}>
-          <Model url="/scene.glb" />
+          <Model url={`${process.env.PUBLIC_URL}/scene.glb`} />
         </Suspense>
         <OrbitControls autoRotate enablePan={false} enableZoom={false} maxPolarAngle={Math.PI / 2} minPolarAngle={Math.PI / 2} />
         <Stars radius={500} depth={50} count={1000} factor={10} />
