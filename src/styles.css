@@ -21,13 +21,17 @@ body {
     padding-top: 1em;
     position: absolute;
     top: 0;
-    right: 69%;
+    left: 0;
+    right: 0;
     overflow-x: hidden;
     color: peru;
 }
 
 .content img{
     max-width: 33%;
+}
+.content p{
+    max-width: 42%;
 }
 
 .bg {
