@@ -6,7 +6,7 @@ import { lut3D } from 'three/examples/jsm/tsl/display/Lut3DNode'
 import { ssgi } from 'three/examples/jsm/tsl/display/SSGINode'
 import { bloom } from 'three/examples/jsm/tsl/display/BloomNode'
 
-import React, { Suspense } from 'react'
+import React, { Suspense, useEffect } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { Loader, useGLTF, OrbitControls, PerspectiveCamera, Stars } from '@react-three/drei'
 
@@ -30,8 +30,72 @@ function Model({ url }) {
 }
 
 export default function App() {
+
+  useEffect(() => {
+    // Generic reusable jukebox function
+    function createJukebox(audioId, sourceId, tracks, options = {}) {
+      const audio = document.getElementById(audioId);
+      const source = document.getElementById(sourceId);
+      if (!audio || !source || !tracks) return;
+
+      let index = Math.floor(Math.random() * tracks.length);
+
+      function playTrack() {
+        source.src = tracks[index];
+        audio.load();
+
+        // Start at random timestamp? (DiskD mode)
+        if (options.randomStart) {
+          audio.addEventListener("loadedmetadata", function rs() {
+            audio.removeEventListener("loadedmetadata", rs);
+            const duration = audio.duration;
+            const len = isFinite(duration) ? duration : 3600;
+            audio.currentTime = Math.random() * len;
+          });
+        }
+
+        audio.play().catch(() => {
+          // Unlock audio on first user click
+          const unlock = () => {
+            audio.play();
+            document.removeEventListener("click", unlock);
+          };
+          document.addEventListener("click", unlock);
+        });
+      }
+
+      audio.addEventListener("ended", () => {
+        index = (index + 1) % tracks.length;
+        playTrack();
+      });
+
+      // Start playback on first user click
+      const init = () => {
+        playTrack();
+        document.removeEventListener("click", init);
+      };
+      document.addEventListener("click", init);
+
+    }
+
+    // Start DiskC + DiskD players
+    const cfg = window.APP_CONFIG;
+    createJukebox("DiskC", "DiskCSource", cfg.DiskC, { randomStart: false });
+    createJukebox("DiskD", "DiskDSource", cfg.DiskD, { randomStart: true });
+
+  }, []); // runs once
+
   return (
     <>
+          {/* AUDIO PLAYERS */}
+          <audio id="DiskC" autoplay crossorigin="anonymous" style={{ display: "none" }}>
+          <source id="DiskCSource" type="audio/mpeg" />
+          </audio>
+
+          <audio id="DiskD" autoplay crossorigin="anonymous" style={{ display: "none" }}>
+          <source id="DiskDSource" type="audio/mpeg" />
+          </audio>
+
       <div className="bg" />
           <div className="content"
       dangerouslySetInnerHTML={{
