@@ -33,7 +33,7 @@ export default function App() {
   return (
     <>
       <div className="bg" />
-          <div
+          <div className="content"
       dangerouslySetInnerHTML={{
           __html: window.APP_CONFIG?.htmlContent || '',
       }}
