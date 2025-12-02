@@ -180,7 +180,6 @@ export default function App() {
         <Stars radius={500} depth={50} count={1000} factor={10} />
       </Canvas>
 
-      <div className="layer" />
       <Loader />
 
       <a
