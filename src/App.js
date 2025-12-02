@@ -134,8 +134,6 @@ export default function App() {
         <source id="DiskDSource" type="audio/mpeg" />
       </audio>
 
-      <div className="bg" />
-
       {/* 内容区域（决定 Canvas 高度） */}
       {/* ✨ Zone de contenu (détermine la hauteur du Canvas) */}
       <div
