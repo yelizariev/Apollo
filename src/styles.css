@@ -14,7 +14,7 @@ canvas {
     margin: 0;
     padding: 0;
     width: 100%;
-    height: 200%;
+    height: 100%;
 }
 
 body {
@@ -48,7 +48,6 @@ body {
 h1 {
   font-weight: 900;
   font-size: 5em;
-  margin: 0;
   color: peru;
   line-height: 0.6em;
   letter-spacing: -2px;
