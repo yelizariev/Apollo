@@ -19,8 +19,10 @@ body {
 .content {
     padding-left: 2em;
     padding-top: 1em;
+    position: absolute;
+    top: 0;
+    right: 69%;
     overflow-x: hidden;
-    max-width: 33%;
 }
 
 .content img{
