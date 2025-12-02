@@ -40,9 +40,6 @@ body {
 }
 
 h1 {
-  position: absolute;
-  top: 120px;
-  left: 60px;
   font-weight: 900;
   font-size: 5em;
   margin: 0;
