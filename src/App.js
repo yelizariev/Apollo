@@ -33,11 +33,11 @@ export default function App() {
   return (
     <>
       <div className="bg" />
-      <h1>
-        Learn <span style={{ fontSize: '0.4em' }}>with</span>
-        <br />
-        <span>Jason</span>
-      </h1>
+          <div
+      dangerouslySetInnerHTML={{
+          __html: window.APP_CONFIG?.htmlContent || '',
+      }}
+          />
       <Canvas dpr={[1.5, 2]} linear shadows>
         <fog attach="fog" args={['#272730', 16, 30]} />
         <ambientLight intensity={0.75 * Math.PI} />
