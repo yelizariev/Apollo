@@ -85,7 +85,7 @@ span.header-left {
   width: 200px;
 }
 
-a {
+a.link {
   font-weight: 400;
   font-size: 14px;
   color: inherit;

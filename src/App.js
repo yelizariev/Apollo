@@ -125,9 +125,8 @@ export default function App() {
       </Canvas>
       <div className="layer" />
       <Loader />
-      <a href="https://github.com/drcmda/learnwithjason" className="top-left" children="Github" />
-      <a href="https://twitter.com/0xca0a" className="top-right" children="Twitter" />
-      <a href="https://github.com/pmndrs/react-three-fiber" className="bottom-left" children="@react-three/fiber" />
+      <a href="https://mydream42.com/?debug=https://www.upwork.com/freelancers/~0128fbc8be0ee3d65b" className="link top-right" children="Hire ❄️ Me" />
+      <a href="https://mydream42.com/?debug=https://x.com/yelizariev" className="link bottom-right" children="Fire 🔥 Me" />
     </>
   )
 }
