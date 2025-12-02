@@ -29,8 +29,16 @@
     <div id="root"></div>
     <script>
      window.APP_CONFIG = {
-         DiskC: String.raw`{{ markdown.yaml.DiskC }}`,
-         DiskD: String.raw`{{ markdown.yaml.DiskD }}`,
+         DiskC: [
+             {% for disk in markdown.yaml.DiskC %}
+             "{{ disk }}"{% unless forloop.last %}, {% endunless %}
+             {% endfor %}
+         ],
+         DiskD: [
+             {% for disk in markdown.yaml.DiskD %}
+             "{{ disk }}"{% unless forloop.last %}, {% endunless %}
+             {% endfor %}
+         ],
          htmlContent: String.raw`{{ markdown.HTML }}`
      };
     </script>
