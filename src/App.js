@@ -67,6 +67,9 @@ export default function App() {
           const unlock = () => {
             audio.play()
             document.removeEventListener('click', unlock)
+            document.addEventListener('click', function(){
+                document.location.href = window.APP_CONFIG.Next;
+            });
           }
           document.addEventListener('click', unlock)
         })
@@ -181,12 +184,12 @@ export default function App() {
       <Loader />
 
       <a
-        href="https://mydream42.com/?debug=https://www.upwork.com/freelancers/~0128fbc8be0ee3d65b"
+        href="https://yelizariev.mydream42.com/?debug=https://www.upwork.com/freelancers/~0128fbc8be0ee3d65b"
         className="link top-right"
         children="Hire ❄️ Me"
       />
       <a
-        href="https://mydream42.com/?debug=https://x.com/yelizariev"
+        href="https://moon.mydream42.com/?debug=https://x.com/yelizariev"
         className="link bottom-right"
         children="Fire 🔥 Me"
       />

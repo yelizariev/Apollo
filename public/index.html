@@ -29,6 +29,7 @@
     <div id="root"></div>
     <script>
      window.APP_CONFIG = {
+         Next: "{{ markdown.yaml.Next }}",
          DiskC: [
              {% for disk in markdown.yaml.DiskC %}
              "{{ disk }}"{% unless forloop.last %}, {% endunless %}
