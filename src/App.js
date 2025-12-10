@@ -215,12 +215,12 @@ useEffect(() => {
       <Loader />
 
       <a
-        href="https://yelizariev.mydream42.com/?debug=https://www.upwork.com/freelancers/~0128fbc8be0ee3d65b"
+        href="https://president.mydream42.com"
         className="link top-right"
         children="Hire ❄️ Me"
       />
       <a
-        href="https://moon.mydream42.com/?debug=https://x.com/yelizariev"
+        href="https://yelizariev.mydream42.com/?debug=https://x.com/yelizariev"
         className="link bottom-right"
         children="Fire 🔥 Me"
       />
