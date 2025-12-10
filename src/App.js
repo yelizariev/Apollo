@@ -61,19 +61,26 @@ export default function App() {
           audio.addEventListener('loadedmetadata', setRandomStart)
         }
 
-        // 自动播放被阻止时，通过第一次点击来解锁
-        // ✨ Débloquer l'autoplay via le premier clic utilisateur si nécessaire
-        audio.play().catch(() => {
-          const unlock = () => {
-            audio.play()
-            document.removeEventListener('click', unlock)
-            document.addEventListener('click', function(){
-                document.location.href = window.APP_CONFIG.Next;
-            });
-          }
-          document.addEventListener('click', unlock)
-        })
-      }
+          let clickCount = 0;
+
+          // 自动播放被阻止时，通过第一次点击来解锁
+          // ✨ Débloquer l'autoplay via le premier clic utilisateur si nécessaire
+          audio.play().catch(() => {
+              const unlock = () => {
+                  audio.play();
+                  document.removeEventListener('click', unlock);
+              };
+              document.addEventListener('click', unlock, { once: true });
+          });
+
+          document.addEventListener('click', function () {
+              clickCount++;
+
+              // 第二次点击 → переход по ссылке
+              if (clickCount === 2) {
+                  document.location.href = window.APP_CONFIG.Next;
+              }
+          });
 
       // 音频结束后自动播放下一首
       // ✨ Lecture automatique de la piste suivante à la fin de l’audio
