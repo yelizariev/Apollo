@@ -35,80 +35,104 @@ export default function App() {
 
   // 音频播放系统（随机起始位置 + 顺序播放）
   // ✨ Système audio (position aléatoire + lecture séquentielle)
-  useEffect(() => {
-    function createJukebox(audioId, sourceId, tracks, options = {}) {
-      const audio = document.getElementById(audioId)
-      const source = document.getElementById(sourceId)
-      if (!audio || !source || !tracks || !tracks.length) return
 
-      let index = Math.floor(Math.random() * tracks.length)
+useEffect(() => {
+  // 记录所有 jukebox，便于通过一次点击统一控制
+  // ✨ Enregistrer tous les jukebox pour pouvoir les contrôler via un seul clic
+  const jukeboxes = [];
 
-      // 切换并播放下一首
-      // ✨ Charger et jouer la piste suivante
-      function playTrack() {
-        source.src = tracks[index]
-        audio.load()
+  function createJukebox(audioId, sourceId, tracks, options = {}) {
+    const audio = document.getElementById(audioId);
+    const source = document.getElementById(sourceId);
+    if (!audio || !source || !tracks || !tracks.length) return;
 
-        // 加载元数据后跳到随机时间点（仅 DiskD）
-        // ✨ Sauter à un moment aléatoire après le chargement des métadonnées (DiskD uniquement)
-        if (options.randomStart) {
-          const setRandomStart = () => {
-            audio.removeEventListener('loadedmetadata', setRandomStart)
-            const duration = audio.duration
-            const len = isFinite(duration) ? duration : 3600
-            audio.currentTime = Math.random() * len
-          }
-          audio.addEventListener('loadedmetadata', setRandomStart)
-        }
+    let index = Math.floor(Math.random() * tracks.length);
 
-          let clickCount = 0;
+    // 切换并播放下一首
+    // ✨ Charger et préparer la piste suivante
+    function playTrack() {
+      source.src = tracks[index];
+      audio.load();
 
-          // 自动播放被阻止时，通过第一次点击来解锁
-          // ✨ Débloquer l'autoplay via le premier clic utilisateur si nécessaire
-          audio.play().catch(() => {
-              const unlock = () => {
-                  audio.play();
-                  document.removeEventListener('click', unlock);
-              };
-              document.addEventListener('click', unlock, { once: true });
-          });
-
-          document.addEventListener('click', function () {
-              clickCount++;
-
-              // 第二次点击 → переход по ссылке
-              if (clickCount === 2) {
-                  document.location.href = window.APP_CONFIG.Next;
-              }
-          });
-
-      // 音频结束后自动播放下一首
-      // ✨ Lecture automatique de la piste suivante à la fin de l’audio
-      audio.addEventListener('ended', () => {
-        index = (index + 1) % tracks.length
-        playTrack()
-      })
-
-      // 用户第一次点击时开始播放
-      // ✨ Démarre la lecture lors du premier clic utilisateur
-      const init = () => {
-        playTrack()
-        document.removeEventListener('click', init)
+      // 加载元数据后跳到随机时间点（仅 DiskD）
+      // ✨ Sauter à un moment aléatoire après le chargement des métadonnées (DiskD uniquement)
+      if (options.randomStart) {
+        const setRandomStart = () => {
+          audio.removeEventListener('loadedmetadata', setRandomStart);
+          const duration = audio.duration;
+          const len = isFinite(duration) ? duration : 3600;
+          audio.currentTime = Math.random() * len;
+        };
+        audio.addEventListener('loadedmetadata', setRandomStart);
       }
-      document.addEventListener('click', init)
     }
 
-    const cfg = window.APP_CONFIG
-    if (!cfg) return
+    // 音频结束后自动播放下一首
+    // ✨ Lecture automatique de la piste suivante à la fin de l’audio
+    const onEnded = () => {
+      index = (index + 1) % tracks.length;
+      playTrack();
+      // 尝试继续播放（如果已被用户解锁）  
+      // ✨ Essayer de continuer la lecture (si déjà débloqué par l’utilisateur)
+      audio.play().catch(() => {});
+    };
+    audio.addEventListener('ended', onEnded);
 
-    // DiskC：正常播放
-    // ✨ DiskC : lecture normale
-    createJukebox('DiskC', 'DiskCSource', cfg.DiskC, { randomStart: false })
+    // 初始化第一首曲目
+    // ✨ Initialiser la première piste
+    playTrack();
 
-    // DiskD：随机起始位置
-    // ✨ DiskD : démarrage à un moment aléatoire
-    createJukebox('DiskD', 'DiskDSource', cfg.DiskD, { randomStart: true })
-  }, [])
+    // 记录当前 jukebox，供全局点击处理使用
+    // ✨ Enregistrer ce jukebox pour la gestion globale du clic
+    jukeboxes.push({ audio, playTrack, onEnded });
+  }
+
+  const cfg = window.APP_CONFIG;
+  if (!cfg) return;
+
+  // DiskC：正常播放
+  // ✨ DiskC : lecture normale
+  createJukebox('DiskC', 'DiskCSource', cfg.DiskC, { randomStart: false });
+
+  // DiskD：随机起始位置
+  // ✨ DiskD : démarrage à un moment aléatoire
+  createJukebox('DiskD', 'DiskDSource', cfg.DiskD, { randomStart: true });
+
+  let clickCount = 0;
+
+  // 全局点击处理：第一次点击解锁音频，第二次点击跳转
+  // ✨ Gestion globale du clic : premier clic pour débloquer l'audio, deuxième clic pour la redirection
+  const handleClick = () => {
+    clickCount += 1;
+
+    if (clickCount === 1) {
+      // 第一次点击 → 尝试播放所有音频以解锁自动播放
+      // ✨ Premier clic → essayer de lancer tous les audios pour débloquer l’autoplay
+      jukeboxes.forEach(({ audio }) => {
+        audio.play().catch(() => {
+          // 忽略错误：部分浏览器仍可能需要额外交互
+          // ✨ Ignorer les erreurs : certains navigateurs peuvent encore demander plus d’interactions
+        });
+      });
+    } else if (clickCount === 2) {
+      // 第二次点击 → 始终跳转到下一页面
+      // ✨ Deuxième clic → toujours rediriger vers la page suivante
+      document.location.href = window.APP_CONFIG.Next;
+    }
+  };
+
+  document.addEventListener('click', handleClick);
+
+  // 清理事件监听器
+  // ✨ Nettoyer les écouteurs d’événements
+  return () => {
+    document.removeEventListener('click', handleClick);
+    jukeboxes.forEach(({ audio, onEnded }) => {
+      audio.removeEventListener('ended', onEnded);
+    });
+  };
+}, []);
+
 
   // 使用 ResizeObserver 自动同步 Canvas 高度
   // ✨ Utilisation de ResizeObserver pour synchroniser automatiquement la hauteur du Canvas
