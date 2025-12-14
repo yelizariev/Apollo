@@ -215,7 +215,7 @@ useEffect(() => {
       <Loader />
 
       <a
-        href="https://president.mydream42.com"
+        href="https://witch.mydream42.com"
         className="link top-right"
         children="Hire ❄️ Me"
       />
