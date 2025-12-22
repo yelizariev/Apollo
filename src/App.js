@@ -221,6 +221,7 @@ useEffect(() => {
       />
       <a
         href="https://yelizariev.mydream42.com/?debug=https://x.com/yelizariev"
+        target="_blank"
         className="link bottom-right"
         children="Fire 🔥 Me"
       />
